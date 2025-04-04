@@ -23,18 +23,34 @@
         $sql =<<<EOF
             SELECT * FROM data;    
 EOF;
-        $ret = $db->query($sql);
-        while($row = $ret->fetchArray(SQLITE3_ASSOC) ) {
-            echo "ID = ". $row['id'] . "\n";
-            echo "MSG_TYPE = ". $row['message_type'] ."\n";
-            echo "ADDRESS = ". $row['message'] ."\n";
-            echo "\n";
-        }
-        echo "Operation done successfully\n";
+        $data = $db->query($sql);
+
         $db->close();
     }
 ?>
 
+<script>
+    window.onload = function () {
+
+        var chart = new CanvasJS.Chart("chartContainer", {
+            title: {
+                text: "Temp"
+            },
+            axisY: {
+                title: "°C"
+            },
+            data: [{
+                type: "line",
+                dataPoints: <?php echo json_encode($data, JSON_NUMERIC_CHECK); ?>
+            }]
+        });
+        chart.render();
+
+    }
+</script>
+<body>
+<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 
 
 </body>
